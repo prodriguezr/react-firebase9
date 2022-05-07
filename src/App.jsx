@@ -1,8 +1,15 @@
+import { useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
+
 import { Navbar, RequireAuth } from './components';
-import { HomeRoute, LoginRoute } from './routes';
+import { UserContext } from './context/userProvider';
+import { HomeRoute, LoginRoute, RegisterRoute } from './routes';
 
 const App = () => {
+  const { user } = useContext(UserContext);
+
+  if (user === false) return <p>Loading app...</p>;
+
   return (
     <>
       <h1>APP</h1>
@@ -16,7 +23,16 @@ const App = () => {
             </RequireAuth>
           }
         />
+        <Route
+          path='/home'
+          element={
+            <RequireAuth>
+              <HomeRoute />
+            </RequireAuth>
+          }
+        />
         <Route path='/login' element={<LoginRoute />} />
+        <Route path='/register' element={<RegisterRoute />} />
       </Routes>
     </>
   );

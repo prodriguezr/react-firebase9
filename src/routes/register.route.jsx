@@ -1,14 +1,14 @@
 import { useContext, useState } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 
 import { UserContext } from '../context/userProvider';
 
-export const LoginRoute = () => {
+export const RegisterRoute = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
-  const { setUser, loginUser } = useContext(UserContext);
+  const { registerUser } = useContext(UserContext);
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -17,12 +17,8 @@ export const LoginRoute = () => {
     console.log('Processing form:', email, password);
 
     try {
-      await loginUser(email, password);
-
-      console.log('User successfully logged in');
-
-      setUser(true);
-      navigate('/home');
+      await registerUser(email, password);
+      navigate('/');
     } catch (error) {
       console.log(error.code);
     }
@@ -30,7 +26,7 @@ export const LoginRoute = () => {
 
   return (
     <>
-      <h1>Login</h1>
+      <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <input
           type='email'
@@ -48,7 +44,7 @@ export const LoginRoute = () => {
           value={password || ''}
           onChange={({ target }) => setPassword(target.value)}
         />
-        <button type='submit'>Login</button>
+        <button type='submit'>Register</button>
       </form>
     </>
   );
