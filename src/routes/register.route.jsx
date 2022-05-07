@@ -21,8 +21,6 @@ export const RegisterRoute = () => {
       await registerUser(email, password);
       navigate('/');
     } catch (error) {
-      console.log(error.code);
-
       switch (error.code) {
         case 'auth/email-already-in-use': {
           setError('email', {
