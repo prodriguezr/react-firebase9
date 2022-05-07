@@ -27,8 +27,6 @@ const UserProvider = ({ children }) => {
       if (fbUser) {
         const { email, photoURL, displayName, uid } = fbUser;
         setUser({ email, photoURL, displayName, uid });
-
-        console.log(user);
       } else {
         setUser(null);
       }
@@ -36,6 +34,10 @@ const UserProvider = ({ children }) => {
 
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
 
   return (
     <UserContext.Provider
