@@ -1,53 +1,55 @@
-import { useContext, useState } from 'react';
-
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { useForm } from 'react-hook-form';
+import { FormError, FormInput } from '../components';
 import { UserContext } from '../context/userProvider';
+import { firebaseErrors, formValidate } from '../utils';
 
 export const LoginRoute = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-
-  const { setUser, loginUser } = useContext(UserContext);
+  const { patternEmail, required, minLength, validateTrim } = formValidate();
+  const { loginUser } = useContext(UserContext);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    console.log('Processing form:', email, password);
-
+  const onSubmit = async ({ email, password }) => {
     try {
       await loginUser(email, password);
-
-      console.log('User successfully logged in');
-
-      setUser(true);
-      navigate('/home');
-    } catch (error) {
-      console.log(error.code);
+      navigate('/');
+    } catch ({ code: errorCode }) {
+      setError('firebaseError', { message: firebaseErrors(errorCode) });
     }
   };
 
   return (
     <>
       <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <input
+      <FormError error={errors.firebaseError} />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormInput
           type='email'
-          autoComplete='off'
           placeholder='Enter your email'
-          name='email'
-          value={email || ''}
-          onChange={({ target }) => setEmail(target.value)}
-        />
-        <input
+          {...register('email', {
+            required,
+            pattern: patternEmail,
+          })}
+        >
+          <FormError error={errors.email} />
+        </FormInput>
+
+        <FormInput
           type='password'
-          autoComplete='off'
-          placeholder='Enter your password'
-          name='password'
-          value={password || ''}
-          onChange={({ target }) => setPassword(target.value)}
-        />
+          {...register('password', {
+            minLength,
+            validate: validateTrim,
+          })}
+        >
+          <FormError error={errors.password} />
+        </FormInput>
         <button type='submit'>Login</button>
       </form>
     </>
