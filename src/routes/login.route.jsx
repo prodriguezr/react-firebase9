@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { FormError, FormInput } from '../components';
+import { Button, FormError, FormInput, Title } from '../components';
 import { UserContext } from '../context/userProvider';
 import { firebaseErrors, formValidate } from '../utils';
 
@@ -21,36 +21,40 @@ export const LoginRoute = () => {
       await loginUser(email, password);
       navigate('/');
     } catch ({ code: errorCode }) {
-      setError('firebaseError', { message: firebaseErrors(errorCode) });
+      const { code, message } = firebaseErrors(errorCode);
+      setError(code, { message });
     }
   };
 
   return (
     <>
-      <h1>Login</h1>
-      <FormError error={errors.firebaseError} />
+      <Title text='Login User' />
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           type='email'
+          label='Email:'
           placeholder='Enter your email'
           {...register('email', {
             required,
             pattern: patternEmail,
           })}
+          error={errors.email}
         >
           <FormError error={errors.email} />
         </FormInput>
 
         <FormInput
           type='password'
+          label='Password:'
           {...register('password', {
             minLength,
             validate: validateTrim,
           })}
+          error={errors.password}
         >
           <FormError error={errors.password} />
         </FormInput>
-        <button type='submit'>Login</button>
+        <Button text='Login' type='submit' />
       </form>
     </>
   );

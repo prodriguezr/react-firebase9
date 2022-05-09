@@ -3,19 +3,34 @@ export const firebaseErrors = (errorCode) => {
 
   switch (errorCode) {
     case 'auth/email-already-in-use': {
-      return 'Email already in use';
+      return {
+        code: 'email',
+        message: 'Email already in use',
+      };
     }
     case 'auth/invalid-email': {
-      return 'Email format invalid';
+      return {
+        code: 'email',
+        message: 'Email format invalid',
+      };
     }
     case 'auth/user-not-found': {
-      return 'User not found';
+      return {
+        code: 'email',
+        message: 'User not found',
+      };
     }
     case 'auth/wrong-password': {
-      return 'Wrong password';
+      return {
+        code: 'password',
+        message: 'Wrong password',
+      };
     }
     default: {
-      return 'Unknown error';
+      return {
+        code: 'unknown',
+        message: 'Unknown error',
+      };
     }
   }
 };

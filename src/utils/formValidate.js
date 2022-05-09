@@ -9,9 +9,11 @@ export const formValidate = () => {
         /[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})/,
       message: 'Wrong email format',
     },
-    minLength: {
-      value: 6,
-      message: 'Min 6 characters',
+    minLength(value) {
+      return {
+        value,
+        message: 'Min 6 characters',
+      };
     },
     validateTrim: {
       trim: (v) => {
@@ -21,9 +23,9 @@ export const formValidate = () => {
         return true;
       },
     },
-    validateEquals(getValues) {
+    validateEquals(value) {
       return {
-        equals: (v) => v === getValues('password') || 'Passwords do not match',
+        equals: (v) => v === value || 'Passwords do not match',
       };
     },
   };

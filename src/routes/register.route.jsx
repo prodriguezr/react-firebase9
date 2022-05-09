@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { UserContext } from '../context/userProvider';
 import { firebaseErrors, formValidate } from '../utils';
-import { FormError, FormInput } from '../components';
+import { FormError, FormInput, Title, Button } from '../components';
 
 export const RegisterRoute = () => {
   const navigate = useNavigate();
@@ -25,46 +25,53 @@ export const RegisterRoute = () => {
       await registerUser(email, password);
       navigate('/');
     } catch ({ code: errorCode }) {
-      setError('firebaseError', { message: firebaseErrors(errorCode) });
+      const { code, message } = firebaseErrors(errorCode);
+      setError(code, { message });
     }
   };
 
   return (
     <>
-      <h1>Register</h1>
-      <FormError error={errors.firebaseError} />
+      <Title text='Users Register' />
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           type='email'
+          label='Email:'
           placeholder='Enter your email'
           {...register('email', {
             required,
             pattern: patternEmail,
           })}
+          error={errors.email}
         >
           <FormError error={errors.email} />
         </FormInput>
 
         <FormInput
           type='password'
+          label='Password:'
           {...register('password', {
-            minLength,
+            minLength: minLength(6),
             validate: validateTrim,
           })}
+          error={errors.password}
         >
           <FormError error={errors.password} />
         </FormInput>
 
         <FormInput
           type='password'
+          label='Re-type Password:'
           {...register('retryPassword', {
-            validate: validateEquals(getValues),
+            minLength: minLength(6),
+            validate: validateEquals(getValues('password')),
           })}
+          error={errors.retryPassword}
         >
           <FormError error={errors.retryPassword} />
         </FormInput>
 
-        <button type='submit'>Register</button>
+        <Button text='Sign up' type='submit' />
       </form>
     </>
   );

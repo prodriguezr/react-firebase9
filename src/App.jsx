@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { Navbar, RequireAuth } from './components';
+import { AuthLayout, Navbar, RequireAuth } from './components';
 import { UserContext } from './context/userProvider';
 import { HomeRoute, LoginRoute, RegisterRoute } from './routes';
 
@@ -31,8 +31,10 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route path='/login' element={<LoginRoute />} />
-        <Route path='/register' element={<RegisterRoute />} />
+        <Route path='/' element={<AuthLayout />}>
+          <Route path='/login' element={<LoginRoute />} />
+          <Route path='/register' element={<RegisterRoute />} />
+        </Route>
       </Routes>
     </>
   );
